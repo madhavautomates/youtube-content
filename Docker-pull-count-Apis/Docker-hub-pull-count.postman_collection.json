@@ -1,0 +1,118 @@
+{
+	"info": {
+		"_postman_id": "9755343c-9b25-40fc-a3f1-5e8e08dad237",
+		"name": "Docker-hub-pull-count",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "24436011"
+	},
+	"item": [
+		{
+			"name": "https://auth.docker.io/token?service=registry.docker.io&scope=repository:ratelimitpreview/test:pull",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();\r",
+							"pm.collectionVariables.set(\"token\", jsonData.token);\r",
+							"pm.environment.set(\"token\", jsonData.token);\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "password",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "username",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://auth.docker.io/token?service=registry.docker.io&scope=repository:ratelimitpreview/test:pull",
+					"protocol": "https",
+					"host": [
+						"auth",
+						"docker",
+						"io"
+					],
+					"path": [
+						"token"
+					],
+					"query": [
+						{
+							"key": "service",
+							"value": "registry.docker.io"
+						},
+						{
+							"key": "scope",
+							"value": "repository:ratelimitpreview/test:pull"
+						}
+					]
+				},
+				"description": "Generated from cURL: curl --user 'username:password' \"https://auth.docker.io/token?service=registry.docker.io&scope=repository:ratelimitpreview/test:pull\" | jq -r .token"
+			},
+			"response": []
+		},
+		{
+			"name": "https://registry-1.docker.io/v2/ratelimitpreview/test/manifests/latest",
+			"request": {
+				"method": "HEAD",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}"
+					}
+				],
+				"url": {
+					"raw": "https://registry-1.docker.io/v2/ratelimitpreview/test/manifests/latest",
+					"protocol": "https",
+					"host": [
+						"registry-1",
+						"docker",
+						"io"
+					],
+					"path": [
+						"v2",
+						"ratelimitpreview",
+						"test",
+						"manifests",
+						"latest"
+					]
+				},
+				"description": "Generated from cURL: curl --head -H \"Authorization: Bearer $TOKEN\" https://registry-1.docker.io/v2/ratelimitpreview/test/manifests/latest 2>&1 | grep RateLimit"
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "token",
+			"value": ""
+		}
+	]
+}
